@@ -1,0 +1,43 @@
+<h1>Users</h1>
+
+<p>Here is a list of Users: feel to play with it</p>
+
+
+<p *ngIf="!users"><em>Loading...</em></p>
+
+
+<table mat-table [dataSource]="users" class="table-striped mat-elevation-z8" [hidden]="!users">
+  <ng-container matColumnDef="usersId">
+    <th mat-header-cell *matHeaderCellDef>ID</th>
+    <td mat-cell *matCellDef="let user">{{user.usersId}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let user">{{user.name}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="moLastName">
+    <th mat-header-cell *matHeaderCellDef>Mother Name</th>
+    <td mat-cell *matCellDef="let user">{{user.moLastName}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="faLastName">
+    <th mat-header-cell *matHeaderCellDef>Father Name</th>
+    <td mat-cell *matCellDef="let user">{{user.faLastName}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="address">
+    <th mat-header-cell *matHeaderCellDef>Address</th>
+    <td mat-cell *matCellDef="let user">{{user.address}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="pnumber">
+    <th mat-header-cell *matHeaderCellDef>Phone</th>
+    <td mat-cell *matCellDef="let user">{{user.pnumber}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
