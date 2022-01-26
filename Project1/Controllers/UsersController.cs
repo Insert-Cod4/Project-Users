@@ -23,9 +23,14 @@ namespace Project1.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        {
-            return await _context.Users.ToListAsync();
+        //[Route("{pageIndex}/{pageSize?}")]
+        public async Task<ActionResult<ApiResult<User>>> GetUsers(int pageIndex = 0 , int pageSize = 10 ,
+            string sortColumn = null , string sortOrder = null , string filterColumn = null , string filterQuery = null)
+        {   
+            //var users = _context.Users;
+            //if(!string.IsNullOrEmpty(filterColumn) && !string.IsNullOrEmpty(filterQuery))
+
+            return await ApiResult<User>.CreateAsync( _context.Users, pageIndex, pageSize , sortColumn , sortOrder , filterColumn , filterQuery);
         }
 
 
