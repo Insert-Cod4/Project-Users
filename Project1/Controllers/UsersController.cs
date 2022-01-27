@@ -36,7 +36,7 @@ namespace Project1.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetCity(int id)
+        public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -50,7 +50,7 @@ namespace Project1.Controllers
 
 
         [HttpPut("id")]
-        public async Task<ActionResult> PutCity(int id , User user)
+        public async Task<ActionResult> PutUser(int id , User user)
         {
             if(id != user.UsersId)
             {
@@ -79,7 +79,7 @@ namespace Project1.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostCity(User user)
+        public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -87,7 +87,11 @@ namespace Project1.Controllers
             return CreatedAtAction("GetUser", new { id = user.UsersId }, user);
         }
 
-        [HttpDelete("{id}")]
+
+
+
+
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -106,6 +110,20 @@ namespace Project1.Controllers
             return _context.Users.Any(e => e.UsersId == id);
         }
 
+
+        [HttpPost]
+        [Route("IsDupeUser")]
+        public bool IsDupeUser(User user)
+        {
+            return _context.Users.Any(
+                e => e.Name == user.Name
+                && e.MoLastName == user.MoLastName
+                && e.FaLastName == user.FaLastName
+                && e.Address == user.Address
+                && e.Pnumber == user.Pnumber
+                && e.UsersId != user.UsersId
+                );
+        }
 
 
     }

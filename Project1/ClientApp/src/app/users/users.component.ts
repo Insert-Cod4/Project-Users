@@ -4,6 +4,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
+import { Subject } from 'rxjs';
+import { debounceTime, distinct, distinctUntilChanged } from 'rxjs/operators';
+
+
 import { User } from './user'
 
 @Component({
@@ -13,7 +17,8 @@ import { User } from './user'
 })
 
 export class UsersComponent implements OnInit {
-  public displayedColumns: string[] = ['usersId', 'name', 'moLastName', 'faLastName', 'address','pnumber'];
+
+  public displayedColumns: string[] = ['usersId', 'name', 'moLastName', 'faLastName', 'address','pnumber' , 'delete'];
   public users: MatTableDataSource<User>;
 
   defaultPageIndex: number = 0;
@@ -26,7 +31,10 @@ export class UsersComponent implements OnInit {
   filterQuery: string = null;
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
+
+  filterTextChanged: Subject<string> = new Subject<string>();
 
   constructor(
     private http: HttpClient,
@@ -36,6 +44,18 @@ export class UsersComponent implements OnInit {
     this.loadData(null);
   }
 
+  // debounce filter text changes
+  onFilterTextChanged(filterText: string) {
+    if (this.filterTextChanged.observers.length === 0) {
+      this.filterTextChanged.pipe(debounceTime(500), distinctUntilChanged())
+        .subscribe(query => {
+          this.loadData(query);
+        });
+    }
+    this.filterTextChanged.next(filterText);
+  }
+
+
   loadData(query: string = null) {
     var pageEvent = new PageEvent();
     pageEvent.pageIndex = this.defaultPageIndex;
@@ -43,6 +63,8 @@ export class UsersComponent implements OnInit {
     if (query) { this.filterQuery = query;}
     this.getData(pageEvent);
   }
+
+  onDelete
 
   getData(event: PageEvent) {
     var url = this.baseUrl + 'api/Users';

@@ -4,5 +4,5 @@ export interface User {
   molastname: string;
   falastname: string;
   address: string;
-  number: number;
+  pnumber: string;
 }
