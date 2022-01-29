@@ -48,9 +48,9 @@ namespace Project1.Controllers
         }
 
 
-
-        [HttpPut("id")]
-        public async Task<ActionResult> PutUser(int id , User user)
+        // PUT: api/Users/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int id , User user)
         {
             if(id != user.UsersId)
             {
@@ -88,10 +88,7 @@ namespace Project1.Controllers
         }
 
 
-
-
-
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);

@@ -5,10 +5,10 @@
 
   <div class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
 
-    <div *ngIf="form.invalid && form.errors && form.errors?.isDupeUser" class="alert alert-danger">
-      <strong>ERROR</strong>:
+    <div *ngIf="form.invalid && form.errors && form.errors?.isDupeUser" class="alert alert-warning">
+      <strong>Warning</strong>:
       A user with the same <i>Name</i> , <i>Mother name</i>,
-     <i>Father's name'</i> , <i>Adress</i> and <i>Phone</i> already exists.
+      <i>Father's name'</i> , <i>Adress</i> and <i>Phone</i> already exists.
 
     </div>
 
@@ -18,87 +18,137 @@
       <label for="name">User name:</label>
       <br />
       <input type="text" id="name" formControlName="name" required placeholder="User name..." class="form-control" />
-      <div *ngIf="form.get('name').invalid && (form.get('name').dirty) || form.get('name').touched" class="invalid-feedback">
+      <div *ngIf="hasError('name')" class="invalid-feedback">
         <div *ngIf="form.get('name').errors?.required">
-          Name is required
+          <span>Name is required</span>
         </div>
+
+        <div *ngIf="form.get('name').errors?.minlength || form.get('name').errors?.maxlength ">
+          Name should be 4 - 10 characters long
+        </div>
+
+
+        <div *ngIf="form.get('name').errors?.pattern">
+          Only letters
+        </div>
+
+
       </div>
     </div>
+     
 
     
+
     <div class="form-group">
       <label for="name">User Mother's Name':</label>
       <br />
       <input type="text" id="moLastName" formControlName="moLastName" required placeholder="User Mother's Name..." class="form-control" />
-      <div *ngIf="form.get('moLastName').invalid && (form.get('moLastName').dirty) || form.get('moLastName').touched" class="invalid-feedback">
+      <div *ngIf="hasError('moLastName')" class="invalid-feedback">
         <div *ngIf="form.get('moLastName').errors?.required">
           Mother's Name is required
+        </div>
+
+        <div *ngIf="form.get('moLastName').errors?.minlength || form.get('moLastName').errors?.maxlength ">
+          Mother Name should be 4 - 10 characters long
+        </div>
+
+        <div *ngIf="form.get('moLastName').errors?.pattern">
+          Only letters
         </div>
       </div>
     </div>
 
 
-    
+
     <div class="form-group">
       <label for="name">User Father's Name':</label>
       <br />
       <input type="text" id="faLastName" formControlName="faLastName" required placeholder="User Father's Name..." class="form-control" />
-      <div *ngIf="form.get('faLastName').invalid && (form.get('faLastName').dirty) || form.get('faLastName').touched" class="invalid-feedback">
+      <div *ngIf="hasError('faLastName')" class="invalid-feedback">
         <div *ngIf="form.get('faLastName').errors?.required">
           Father's Name is required
+        </div>
+
+        <div *ngIf="form.get('faLastName').errors?.minlength || form.get('faLastName').errors?.maxlength ">
+          Father Name should be 4 - 10 characters long
+        </div>
+
+        <div *ngIf="form.get('faLastName').errors?.pattern">
+          Only letters
         </div>
       </div>
     </div>
 
-   
+
     <div class="form-group">
       <label for="name">User address:</label>
       <br />
       <input type="text" id="address" formControlName="address" required placeholder="User Address..." class="form-control" />
-      <div *ngIf="form.get('address').invalid && (form.get('address').dirty) || form.get('address').touched" class="invalid-feedback">
+      <div *ngIf="hasError('address')" class="invalid-feedback">
         <div *ngIf="form.get('address').errors?.required">
-          Address is required
+          Address Name is required
+        </div>
+
+        <div *ngIf="form.get('address').errors?.minlength || form.get('address').errors?.maxlength ">
+          Address should be 5 - 30 characters long
         </div>
       </div>
     </div>
 
-    
+
     <div class="form-group">
-      <label for="name">User Phone number:</label>
+      <mat-label for="name">User Phone number:</mat-label>
+      
       <br />
       <input type="text" id="pnumber" formControlName="pnumber" required placeholder="User Phone number..." class="form-control" />
-      <div *ngIf="form.get('pnumber').invalid && (form.get('pnumber').dirty) || form.get('pnumber').touched" class="invalid-feedback">
+      <div *ngIf="hasError('pnumber')" class="invalid-feedback">
         <div *ngIf="form.get('pnumber').errors?.required">
-          Phone number is required
+          Phone is required
+        </div>
+
+        <div *ngIf="form.get('pnumber').errors?.minlength || form.get('pnumber').errors?.maxlength ">
+          Phone number should be 6 - 10 decimal long
+        </div>
+
+        <div *ngIf="form.get('pnumber').errors?.pattern">
+          Phone number requires 0-9 decimal values
         </div>
       </div>
-    </div>
 
-
-      <div class="form-group commands">
-
-        <button *ngIf="id" type="submit"
-                (click)="onSubmit()"
-                [disabled]="form.invalid"
-                class="btn btn-success">
-          Save
-        </button>
-
-        <button *ngIf="!id" type="submit"
-                (click)="onSubmit()"
-                [disabled]="form.invalid"
-                class="btn btn-success">
-          Create
-        </button>
-
-        <button type="button" [routerLink]="['/users']"
-                class="btn">
-          Cancel
-        </button>
-
-      </div>
+      
 
     </div>
+
+
+    <div class="form-group commands test">
+
+      <button *ngIf="id" type="submit"
+              (click)="onSubmit()"
+              [disabled]="form.invalid"
+              class="btn btn-success">
+        Save
+      </button>
+
+      <button *ngIf="!id" type="submit"
+              (click)="onSubmit()"
+              [disabled]="form.invalid"
+              class="btn btn-success">
+        Create
+      </button>
+
+      <button *ngIf="id" type="button" [routerLink]="['/users']" (click)="onDeletee()"
+              class="btn btn-danger">
+        Delete
+      </button>
+
+      <button type="button" [routerLink]="['/users']"
+              class="btn btn-light">
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
 
 </div>
 

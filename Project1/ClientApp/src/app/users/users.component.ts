@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -18,8 +19,11 @@ import { User } from './user'
 
 export class UsersComponent implements OnInit {
 
-  public displayedColumns: string[] = ['usersId', 'name', 'moLastName', 'faLastName', 'address','pnumber' , 'delete'];
+  public displayedColumns: string[] = ['usersId', 'name', 'moLastName', 'faLastName', 'address','pnumber' ];
   public users: MatTableDataSource<User>;
+
+  user: User;
+  //id?: number;
 
   defaultPageIndex: number = 0;
   defaultPageSize: number = 10;
@@ -37,6 +41,8 @@ export class UsersComponent implements OnInit {
   filterTextChanged: Subject<string> = new Subject<string>();
 
   constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string) { }
 
@@ -64,8 +70,7 @@ export class UsersComponent implements OnInit {
     this.getData(pageEvent);
   }
 
-  onDelete
-
+  
   getData(event: PageEvent) {
     var url = this.baseUrl + 'api/Users';
     var params = new HttpParams()

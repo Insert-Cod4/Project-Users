@@ -7,8 +7,7 @@ import { map } from 'rxjs/operators';
 
 import { User } from './User';
 import { AsyncValidator } from '@angular/forms';
-//import { Console } from 'console';
-//import { Console } from 'console';
+import { BaseFormComponent } from '../base.form.component';
 
 @Component({
   selector: 'app-user-edit',
@@ -16,7 +15,7 @@ import { AsyncValidator } from '@angular/forms';
   styleUrls: ['./user-edit.component.css']
 })
 
-export class UserEditComponent implements OnInit {
+export class UserEditComponent extends BaseFormComponent implements OnInit {
 
   title: string;
 
@@ -31,15 +30,16 @@ export class UserEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    @Inject('BASE_URL') private baseUrl: string) {}
+    @Inject('BASE_URL') private baseUrl: string) { super();}
 
   ngOnInit() {
     this.form = new FormGroup({
-      name: new FormControl('', Validators.required),
-      moLastName: new FormControl('', Validators.required),
-      faLastName: new FormControl('', Validators.required),
-      address: new FormControl('', Validators.required),
-      pnumber: new FormControl('', Validators.required)
+      name: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(10), Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
+      moLastName: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(10), Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
+      faLastName: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(10), Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
+      address: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(30)] ),
+      pnumber: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(10) ,Validators.pattern(/^[-]?[0-9]+(\.[0-9]{1,4})?$/)
+]),
     } , null , this.isDupeUser());
 
     this.loadData();
@@ -79,16 +79,11 @@ export class UserEditComponent implements OnInit {
       user.address = this.form.get("address").value;
       user.pnumber = this.form.get("pnumber").value;
 
-      /*console.log(user.name);
-      console.log(user.molastname);
-      console.log(user.falastname);
-      console.log(user.address);
-      console.log(user.number);*/
-
       if (this.id) {
           console.log("EDit Mode " + this.id);
           console.log("EDit Mode  " + this.user.id);
-          var url = this.baseUrl + "api/Users/" + this.id;
+        var url = this.baseUrl + "api/Users/" + this.id;
+        console.log("Edit User  " + user);
         this.http
           .put<User>(url, user)
           .subscribe(result => {
@@ -113,6 +108,26 @@ export class UserEditComponent implements OnInit {
       }
       
   }
+
+
+  onDeletee() {
+
+    this.id = +this.activatedRoute.snapshot.paramMap.get('id');
+    var url = this.baseUrl + 'api/Users/' + this.id;
+    console.log(url);
+    this.http
+      .delete<User>(url)
+      .subscribe(result => {
+
+        console.log("User " + this.id + " has been Delete");
+
+        this.router.navigate(['/users']);
+      }, error => console.error(error));
+  }
+
+
+
+
 
 
   isDupeUser(): AsyncValidatorFn {
